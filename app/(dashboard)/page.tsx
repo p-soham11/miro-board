@@ -11,7 +11,7 @@ const DashboardPage = () => {
         <div>
             <Checkbox>Select</Checkbox>
             <br />
-            <Switch>Automatic updates</Switch>
+            <Switch color="success">Automatic updates</Switch>
             <div>Dashboard Root page</div>
         </div>
     );
