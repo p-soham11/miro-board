@@ -8,8 +8,8 @@ export const Loading = () => {
             <Image
                 src="/skateloader.gif"
                 alt="Loading"
-                width={118}
-                height={118}
+                width={90}
+                height={90}
                 // className="animate-pulse duration-800"
             />
         </div>
