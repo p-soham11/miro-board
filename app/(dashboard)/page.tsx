@@ -1,14 +1,25 @@
 /** @format */
 
-import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
-import Image from "next/image";
-import { Switch } from "@nextui-org/switch";
-import { Checkbox } from "@nextui-org/checkbox";
+"use client";
 
-const DashboardPage = () => {
+import { useOrganization } from "@clerk/nextjs";
+import { EmptyOrg } from "./_components/emptyOrg";
+
+interface DashboardPageProps {
+    searchParams: {
+        search?: string;
+        favourites?: string;
+    };
+}
+
+const DashboardPage = ({ searchParams }: DashboardPageProps) => {
+    const { organization } = useOrganization();
+
     return (
-        <div className="bg-green-400 flex-1 h-[calc(100%-92px)]"> Hello</div>
+        <div className="flex-1 h-[calc(100%-92px)] p-6">
+            {JSON.stringify(searchParams)}
+            {!organization ? <EmptyOrg /> : <p>Board List!</p>}
+        </div>
     );
 };
 

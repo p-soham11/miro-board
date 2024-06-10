@@ -1,6 +1,6 @@
 /** @format */
 
-"use client";
+"use client"; // Ensure this is a client component
 
 import Link from "next/link";
 import Image from "next/image";
@@ -9,14 +9,24 @@ import { Poppins } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { Button } from "@nextui-org/button";
 import { LayoutDashboard, Star } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-// import { Button } from "@/components/ui/button";
+import { useSearchParams, useRouter } from "next/navigation"; // Correct import for App Router
 
 const font = Poppins({ subsets: ["latin"], weight: ["600"] });
 
-export const OrgSidebar = () => {
+export const OrgSidebar: React.FC = () => {
     const searchParams = useSearchParams();
     const favourites = searchParams.get("favourites");
+    const router = useRouter();
+
+    const handleNavigation = (isFavourites: boolean) => {
+        const url = new URL(window.location.href);
+        if (isFavourites) {
+            url.searchParams.set("favourites", "true");
+        } else {
+            url.searchParams.delete("favourites");
+        }
+        router.push(url.toString());
+    };
 
     return (
         <div className="hidden lg:flex flex-col space-y-6 w-[206px] pl-5 pt-5 h-screen">
@@ -28,9 +38,6 @@ export const OrgSidebar = () => {
                     </span>
                 </div>
             </Link>
-            {/* <div className="flex items-center justify-center">
-                <OrganizationSwitcher hidePersonal />
-            </div> */}
             <OrganizationSwitcher
                 hidePersonal
                 appearance={{
@@ -53,35 +60,26 @@ export const OrgSidebar = () => {
                 }}
             />
             <div className="space-y-1 w-full">
-                <Link href="/">
-                    <Button
-                        className="font-normal justify-start w-full px-2 mb-3"
-                        startContent={
-                            <LayoutDashboard className="h-4 w-4 mr-2" />
-                        }
-                        color="primary"
-                        size="md"
-                        variant={favourites ? "ghost" : "solid"}
-                    >
-                        Team Boards
-                    </Button>
-                </Link>
-                <Link
-                    href={{
-                        pathname: "/",
-                        query: { favourites: true },
-                    }}
+                <Button
+                    className="font-normal justify-start w-full px-2 mb-3"
+                    startContent={<LayoutDashboard className="h-4 w-4 mr-2" />}
+                    color="primary"
+                    size="md"
+                    variant={favourites ? "ghost" : "solid"}
+                    onClick={() => handleNavigation(false)}
                 >
-                    <Button
-                        className="font-normal justify-start w-full px-2"
-                        startContent={<Star className="h-4 w-4 mr-2" />}
-                        color="primary"
-                        size="md"
-                        variant={favourites ? "solid" : "ghost"}
-                    >
-                        Favourites
-                    </Button>
-                </Link>
+                    Team Boards
+                </Button>
+                <Button
+                    className="font-normal justify-start w-full px-2"
+                    startContent={<Star className="h-4 w-4 mr-2" />}
+                    color="primary"
+                    size="md"
+                    variant={favourites ? "solid" : "ghost"}
+                    onClick={() => handleNavigation(true)}
+                >
+                    Favourites
+                </Button>
             </div>
         </div>
     );

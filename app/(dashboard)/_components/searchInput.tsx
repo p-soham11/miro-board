@@ -9,8 +9,6 @@ import { useDebounce } from "@uidotdev/usehooks";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useEffect, useState } from "react";
 import { Input } from "@nextui-org/input";
-import { url } from "inspector";
-import { log } from "console";
 
 export const SearchInput = () => {
     const router = useRouter();
@@ -23,11 +21,13 @@ export const SearchInput = () => {
 
     useEffect(() => {
         const queryParams = { search: debounced };
+        console.log(queryParams);
         const queryStringified = queryString.stringify(queryParams, {
             skipEmptyString: true,
             skipNull: true,
         });
         const url = `/?${queryStringified}`;
+        console.log(url);
         router.push(url);
     }, [debounced, router]);
 
