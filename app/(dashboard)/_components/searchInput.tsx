@@ -33,9 +33,9 @@ export const SearchInput = () => {
 
     return (
         <div className="w-full relative">
-            <Search className="absolute top-1 left-5 transform translate-y-1/2" />
+            <Search className="absolute left-5 transform translate-y-[6px]" />
             <Input
-                className="w-full max-w-[586px] pl-[60px]"
+                className="w-full max-w-[596px] pl-[60px] max-h-[54px] transform translate-y-2 mt-[-18px]"
                 label="Search Boards"
                 onChange={handleInputChange}
                 value={value}

@@ -11,7 +11,7 @@ export const Navbar = () => {
     const { organization } = useOrganization();
 
     return (
-        <div className="flex items-center gap-x-4 p-5 rounded-large">
+        <div className="h-full flex items-center gap-x-4 pt-5 pr-5 pb-5 pl-1 rounded-large max-h-[92px]">
             <div className="hidden lg:flex lg:flex-1">
                 <SearchInput />
             </div>
@@ -25,11 +25,14 @@ export const Navbar = () => {
                                 justifyContent: "center",
                                 alignItems: "center",
                                 width: "100%",
+                                height: "100%",
                                 maxWidth: "360px",
+                                marginLeft: "8px",
                             },
                             organizationSwitcherTrigger: {
                                 padding: "6px",
                                 width: "100%",
+                                height: "40px",
                                 borderRadius: "10px",
                                 border: "1px solid #9B999B",
                                 justifyContent: "space-between",

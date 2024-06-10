@@ -8,12 +8,7 @@ import { Checkbox } from "@nextui-org/checkbox";
 
 const DashboardPage = () => {
     return (
-        <div>
-            <Checkbox>Select</Checkbox>
-            <br />
-            <Switch color="success">Automatic updates</Switch>
-            <div>Dashboard Root page</div>
-        </div>
+        <div className="bg-green-400 flex-1 h-[calc(100%-92px)]"> Hello</div>
     );
 };
 
