@@ -11,7 +11,7 @@ import { Button } from "@nextui-org/button";
 import { LayoutDashboard, Star } from "lucide-react";
 import { useSearchParams, useRouter } from "next/navigation"; // Correct import for App Router
 
-const font = Poppins({ subsets: ["latin"], weight: ["600"] });
+const font = Poppins({ subsets: ["latin"], weight: ["700"] });
 
 export const OrgSidebar: React.FC = () => {
     const searchParams = useSearchParams();
@@ -33,7 +33,9 @@ export const OrgSidebar: React.FC = () => {
             <Link href="/">
                 <div className="flex items-center gap-x-2">
                     <Image src="/logo.svg" alt="logo" width={54} height={54} />
-                    <span className={cn("font-semibold text-lg text-blue-950")}>
+                    <span
+                        className={cn("text-xl text-blue-950", font.className)}
+                    >
                         mIRO Board
                     </span>
                 </div>
