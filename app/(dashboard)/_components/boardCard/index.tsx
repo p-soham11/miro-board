@@ -8,6 +8,9 @@ import { Overlay } from "./overlay";
 import { formatDistanceToNow } from "date-fns";
 import { useAuth } from "@clerk/nextjs";
 import { Footer } from "./footer";
+import { Skeleton } from "@nextui-org/skeleton";
+import { Actions } from "@/components/actions";
+import { MoreHorizontal } from "lucide-react";
 
 interface BoardCardProps {
     id: string;
@@ -55,6 +58,11 @@ export const BoardCard = ({
                     </div>
                 </div>
                 <Overlay />
+                <Actions id={id} title={title} side="right">
+                    <button className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity px-3 py-2 outline-none">
+                        <MoreHorizontal className="text-cyan-50 opacity-75 hover:opacity-100 transition-opacity" />
+                    </button>
+                </Actions>
                 <Footer
                     isFavourite={isFavourite}
                     title={title}
@@ -65,5 +73,13 @@ export const BoardCard = ({
                 />
             </div>
         </Link>
+    );
+};
+
+BoardCard.Skeleton = function BoardCardSkeleton() {
+    return (
+        <div className="relative  aspect-[100/127] rounded-lg  justify-between overflow-hidden">
+            <Skeleton className="h-full w-full" />
+        </div>
     );
 };
