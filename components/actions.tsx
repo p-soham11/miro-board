@@ -10,12 +10,13 @@ import {
     DropdownMenuItem,
     DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Link2, Trash2 } from "lucide-react";
+import { Link2, Trash2, PenLine } from "lucide-react";
 import { toast } from "sonner";
 import { useApiMutation } from "@/hooks/useApiMutation";
 import { api } from "@/convex/_generated/api";
 import { ConfirmModal } from "@/components/confirmModal";
 import { Button } from "@nextui-org/button";
+import { useRenameModal } from "@/store/useRenameModal";
 
 interface ActionProps {
     children: React.ReactNode;
@@ -32,6 +33,7 @@ export const Actions = ({
     id,
     title,
 }: ActionProps) => {
+    const { onOpen } = useRenameModal();
     const { mutate, pending } = useApiMutation(api.board.remove);
 
     const onCopyLink = () => {
@@ -62,6 +64,13 @@ export const Actions = ({
                 >
                     <Link2 className="h-4 w-4 mr-2" />
                     Copy Board Link! 📋
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => onOpen(id, title)}
+                    className="p-3 cursor-pointer"
+                >
+                    <PenLine className="h-4 w-4 mr-2" />
+                    Rename Board! 📝
                 </DropdownMenuItem>
                 <ConfirmModal
                     header="🚫 Sure to Delete ?"
