@@ -39,6 +39,7 @@ export const SearchInput = () => {
                 label="Search Boards"
                 onChange={handleInputChange}
                 value={value}
+                id="search-input"
             />
         </div>
     );

@@ -21,7 +21,14 @@ export const OrgSidebar: React.FC = () => {
     const handleNavigation = (isFavourites: boolean) => {
         const url = new URL(window.location.href);
         if (isFavourites) {
+            url.searchParams.delete("search");
             url.searchParams.set("favourites", "true");
+            //clear search input field
+            // const searchInput = document.getElementById(
+            //     "search-input"
+            // ) as HTMLInputElement;
+            // searchInput.value = "";
+            // not really working
         } else {
             url.searchParams.delete("favourites");
         }
