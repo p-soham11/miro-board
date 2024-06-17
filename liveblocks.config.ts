@@ -13,7 +13,13 @@ const client = createClient({
 
 type Presence = {};
 type Storage = {};
-type UserMeta = {};
+type UserMeta = {
+    id?: string;
+    info?: {
+        name?: string;
+        picture?: string;
+    };
+};
 type RoomEvent = {};
 
 export const {
