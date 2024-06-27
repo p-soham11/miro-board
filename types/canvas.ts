@@ -132,3 +132,10 @@ export enum CanvasMode {
     Inserting,
     Translating,
 }
+
+export type Layer =
+    | RectangleLayer
+    | EllipseLayer
+    | PathLayer
+    | TextLayer
+    | NoteLayer;
