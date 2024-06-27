@@ -11,7 +11,9 @@ const client = createClient({
     throttle: 16,
 });
 
-type Presence = {};
+type Presence = {
+    cursor: { x: number; y: number } | null;
+};
 type Storage = {};
 type UserMeta = {
     id?: string;
