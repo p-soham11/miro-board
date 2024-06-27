@@ -30,6 +30,7 @@ import { root } from "postcss";
 import { nanoid } from "nanoid";
 import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layerPreview";
+import { SelectionBox } from "./selectionBox";
 
 const MAX_LAYERS = 100;
 
@@ -146,7 +147,8 @@ export const Canvas = ({ boardId }: CanvasProps) => {
             const point = pointerEventToCanvasPoint(e, camera);
 
             if (!self.presence.selection.includes(layerId)) {
-                setMyPresence({ selection: [layerId] }, { addToHistory: true });
+                setMyPresence({ selection: [layerId] });
+                // I am not adding selection to history here!
             }
             setCanvasState({ mode: CanvasMode.Translating, current: point });
         },
@@ -196,6 +198,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
                             selectionColor={layerIdsToColorSelection[layerId]}
                         />
                     ))}
+                    <SelectionBox onResizeHandlePointerDown={() => {}} />
                     <CursorsPresence />
                 </g>
             </svg>
