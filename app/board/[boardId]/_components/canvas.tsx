@@ -28,6 +28,7 @@ import {
 import { CursorsPresence } from "./cursorsPresence";
 import { set } from "date-fns";
 import {
+    findIntersectingLayersWithRectangle,
     pointerEventToCanvasPoint,
     randomColor,
     resizeBounds,
@@ -38,6 +39,7 @@ import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layerPreview";
 import { SelectionBox } from "./selectionBox";
 import { SelectionTools } from "./selectionTools";
+import { update } from "@/convex/board";
 
 const MAX_LAYERS = 100;
 
@@ -99,6 +101,34 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         },
         [lastUsedColor]
     );
+
+    const updateSelectionNet = useMutation(
+        ({ storage, setMyPresence }, current: Point, origin: Point) => {
+            const layers = storage.get("layers").toImmutable();
+            setCanvasState({ mode: CanvasMode.SelectionNet, origin, current });
+            const ids = findIntersectingLayersWithRectangle(
+                layerIds,
+                layers,
+                origin,
+                current
+            );
+            setMyPresence({ selection: ids });
+        },
+        [layerIds]
+    );
+
+    const startMultiSelection = useCallback((current: Point, origin: Point) => {
+        // Function to check if the user is trying to draw a selection box
+        // The delta change in x and y should be greater than 5 (Variable can be changed to adjust sensitivity)
+        if (
+            Math.abs(current.x - origin.x) + Math.abs(current.y - origin.y) >
+            5
+        ) {
+            // console.log("Selection box started");
+
+            setCanvasState({ mode: CanvasMode.SelectionNet, origin, current });
+        }
+    }, []);
 
     const resizeLayer = useMutation(
         ({ storage, self }, point: Point) => {
@@ -199,7 +229,11 @@ export const Canvas = ({ boardId }: CanvasProps) => {
             const current = pointerEventToCanvasPoint(e, camera);
             // console.log(current);
 
-            if (canvasState.mode === CanvasMode.Translating) {
+            if (canvasState.mode === CanvasMode.Pressing) {
+                startMultiSelection(current, canvasState.origin);
+            } else if (canvasState.mode === CanvasMode.SelectionNet) {
+                updateSelectionNet(current, canvasState.origin);
+            } else if (canvasState.mode === CanvasMode.Translating) {
                 translateSelectedLayers(current);
             } else if (canvasState.mode === CanvasMode.Resizing) {
                 resizeLayer(current);
@@ -307,6 +341,26 @@ export const Canvas = ({ boardId }: CanvasProps) => {
                     <SelectionBox
                         onResizeHandlePointerDown={onResizeHandlePointerDown}
                     />
+                    {canvasState.mode === CanvasMode.SelectionNet &&
+                        canvasState.current != null && (
+                            <rect
+                                className="fill-green-500/5 stroke-cyan-500 stroke-1"
+                                x={Math.min(
+                                    canvasState.origin.x,
+                                    canvasState.current.x
+                                )}
+                                y={Math.min(
+                                    canvasState.origin.y,
+                                    canvasState.current.y
+                                )}
+                                width={Math.abs(
+                                    canvasState.origin.x - canvasState.current.x
+                                )}
+                                height={Math.abs(
+                                    canvasState.origin.y - canvasState.current.y
+                                )}
+                            />
+                        )}
                     <CursorsPresence />
                 </g>
             </svg>

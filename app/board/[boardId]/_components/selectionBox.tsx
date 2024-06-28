@@ -34,7 +34,7 @@ export const SelectionBox = memo(
         return (
             <>
                 <rect
-                    className="fill-transparent stroke-blue-400 stroke-1 pointer-events-none"
+                    className="fill-transparent stroke-emerald-500 stroke-1 pointer-events-none"
                     style={{
                         transform: `translate(${bounds.x}px, ${bounds.y}px)`,
                     }}
@@ -46,7 +46,7 @@ export const SelectionBox = memo(
                 {isShowingHandles && (
                     <>
                         <rect
-                            className="fill-white stroke-1 stroke-blue-400"
+                            className="fill-white stroke-1 stroke-emerald-500"
                             x={0}
                             y={0}
                             style={{
@@ -64,7 +64,7 @@ export const SelectionBox = memo(
                             }}
                         />
                         <rect
-                            className="fill-white stroke-1 stroke-blue-400"
+                            className="fill-white stroke-1 stroke-emerald-500"
                             x={0}
                             y={0}
                             style={{
@@ -79,7 +79,7 @@ export const SelectionBox = memo(
                             }}
                         />
                         <rect
-                            className="fill-white stroke-1 stroke-blue-400"
+                            className="fill-white stroke-1 stroke-emerald-500"
                             x={0}
                             y={0}
                             style={{
@@ -97,7 +97,7 @@ export const SelectionBox = memo(
                             }}
                         />
                         <rect
-                            className="fill-white stroke-1 stroke-blue-400"
+                            className="fill-white stroke-1 stroke-emerald-500"
                             x={0}
                             y={0}
                             style={{
@@ -112,7 +112,7 @@ export const SelectionBox = memo(
                             }}
                         />
                         <rect
-                            className="fill-white stroke-1 stroke-blue-400"
+                            className="fill-white stroke-1 stroke-emerald-500"
                             x={0}
                             y={0}
                             style={{
@@ -130,7 +130,7 @@ export const SelectionBox = memo(
                             }}
                         />
                         <rect
-                            className="fill-white stroke-1 stroke-blue-400"
+                            className="fill-white stroke-1 stroke-emerald-500"
                             x={0}
                             y={0}
                             style={{
@@ -145,7 +145,7 @@ export const SelectionBox = memo(
                             }}
                         />
                         <rect
-                            className="fill-white stroke-1 stroke-blue-400"
+                            className="fill-white stroke-1 stroke-emerald-500"
                             x={0}
                             y={0}
                             style={{
@@ -163,7 +163,7 @@ export const SelectionBox = memo(
                             }}
                         />
                         <rect
-                            className="fill-white stroke-1 stroke-blue-400"
+                            className="fill-white stroke-1 stroke-emerald-500"
                             x={0}
                             y={0}
                             style={{
