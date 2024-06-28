@@ -37,6 +37,7 @@ import { nanoid } from "nanoid";
 import { LiveObject } from "@liveblocks/client";
 import { LayerPreview } from "./layerPreview";
 import { SelectionBox } from "./selectionBox";
+import { SelectionTools } from "./selectionTools";
 
 const MAX_LAYERS = 100;
 
@@ -121,6 +122,39 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         [canvasState]
     );
 
+    const unSelectLayers = useMutation(({ self, setMyPresence }) => {
+        if (self.presence.selection.length > 0) {
+            setMyPresence({ selection: [] });
+        }
+    }, []);
+
+    const translateSelectedLayers = useMutation(
+        ({ storage, self }, point: Point) => {
+            if (canvasState.mode !== CanvasMode.Translating) {
+                return;
+            }
+
+            const offset = {
+                x: point.x - canvasState.current.x,
+                y: point.y - canvasState.current.y,
+            };
+
+            const liveLayers = storage.get("layers");
+            for (const id of self.presence.selection) {
+                const layer = liveLayers.get(id);
+                if (layer) {
+                    layer.update({
+                        x: layer.get("x") + offset.x,
+                        y: layer.get("y") + offset.y,
+                    });
+                }
+            }
+
+            setCanvasState({ mode: CanvasMode.Translating, current: point });
+        },
+        [canvasState]
+    );
+
     const onResizeHandlePointerDown = useCallback(
         (corner: Side, initialBounds: XYWH) => {
             history.pause();
@@ -144,28 +178,50 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         setMyPresence({ cursor: null });
     }, []);
 
+    const onPointerDown = useCallback(
+        (e: React.PointerEvent) => {
+            const point = pointerEventToCanvasPoint(e, camera);
+
+            if (canvasState.mode === CanvasMode.Inserting) {
+                return;
+            }
+
+            // Add case for drawing
+
+            setCanvasState({ origin: point, mode: CanvasMode.Pressing });
+        },
+        [canvasState.mode, camera, setCanvasState]
+    );
+
     const onPointerMove = useMutation(
         ({ setMyPresence }, e: React.PointerEvent) => {
             e.preventDefault();
             const current = pointerEventToCanvasPoint(e, camera);
             // console.log(current);
 
-            if (canvasState.mode === CanvasMode.Resizing) {
+            if (canvasState.mode === CanvasMode.Translating) {
+                translateSelectedLayers(current);
+            } else if (canvasState.mode === CanvasMode.Resizing) {
                 resizeLayer(current);
             }
 
             setMyPresence({ cursor: current });
         },
-        [canvasState, resizeLayer, camera]
+        [canvasState, resizeLayer, camera, translateSelectedLayers]
     );
 
     const onPointerUp = useMutation(
         ({}, e) => {
             const point = pointerEventToCanvasPoint(e, camera);
 
-            console.log({ point, mode: canvasState.mode });
-
-            if (canvasState.mode === CanvasMode.Inserting) {
+            if (
+                canvasState.mode === CanvasMode.None ||
+                canvasState.mode === CanvasMode.Pressing
+            ) {
+                // Unselecting any selection
+                unSelectLayers();
+                setCanvasState({ mode: CanvasMode.None });
+            } else if (canvasState.mode === CanvasMode.Inserting) {
                 insertLayer(canvasState.layerType, point);
             } else {
                 setCanvasState({ mode: CanvasMode.None });
@@ -173,7 +229,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
             history.resume();
         },
-        [camera, canvasState, insertLayer, history]
+        [camera, canvasState, insertLayer, history, unSelectLayers]
     );
 
     const selections = useOthersMapped((other) => other.presence.selection);
@@ -223,12 +279,17 @@ export const Canvas = ({ boardId }: CanvasProps) => {
                 undo={history.undo}
                 redo={history.redo}
             />
+            <SelectionTools
+                camera={camera}
+                setLastUsedColor={setLastUsedColor}
+            />
             <svg
                 className="h-[100vh] w-[100vw]"
                 onWheel={onWheel}
                 onPointerMove={onPointerMove}
                 onPointerLeave={onPointerLeave}
                 onPointerUp={onPointerUp}
+                onPointerDown={onPointerDown}
             >
                 <g
                     style={{
