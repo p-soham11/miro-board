@@ -11,7 +11,7 @@ interface SelectionBoxProps {
     onResizeHandlePointerDown: (corner: Side, initialBounds: XYWH) => void;
 }
 
-const HANDLE_WIDTH = 8;
+const HANDLE_WIDTH = 6;
 
 export const SelectionBox = memo(
     ({ onResizeHandlePointerDown }: SelectionBoxProps) => {
@@ -57,7 +57,10 @@ export const SelectionBox = memo(
                             }}
                             onPointerDown={(e) => {
                                 e.stopPropagation();
-                                // Need to add Resize Handler
+                                onResizeHandlePointerDown(
+                                    Side.Top + Side.Left,
+                                    bounds
+                                );
                             }}
                         />
                         <rect
@@ -72,7 +75,7 @@ export const SelectionBox = memo(
                             }}
                             onPointerDown={(e) => {
                                 e.stopPropagation();
-                                // Need to add Resize Handler
+                                onResizeHandlePointerDown(Side.Top, bounds);
                             }}
                         />
                         <rect
@@ -87,7 +90,10 @@ export const SelectionBox = memo(
                             }}
                             onPointerDown={(e) => {
                                 e.stopPropagation();
-                                // Need to add Resize Handler
+                                onResizeHandlePointerDown(
+                                    Side.Top + Side.Right,
+                                    bounds
+                                );
                             }}
                         />
                         <rect
@@ -102,7 +108,7 @@ export const SelectionBox = memo(
                             }}
                             onPointerDown={(e) => {
                                 e.stopPropagation();
-                                // Need to add Resize Handler
+                                onResizeHandlePointerDown(Side.Right, bounds);
                             }}
                         />
                         <rect
@@ -117,7 +123,10 @@ export const SelectionBox = memo(
                             }}
                             onPointerDown={(e) => {
                                 e.stopPropagation();
-                                // Need to add Resize Handler
+                                onResizeHandlePointerDown(
+                                    Side.Bottom + Side.Right,
+                                    bounds
+                                );
                             }}
                         />
                         <rect
@@ -132,7 +141,7 @@ export const SelectionBox = memo(
                             }}
                             onPointerDown={(e) => {
                                 e.stopPropagation();
-                                // Need to add Resize Handler
+                                onResizeHandlePointerDown(Side.Bottom, bounds);
                             }}
                         />
                         <rect
@@ -147,7 +156,10 @@ export const SelectionBox = memo(
                             }}
                             onPointerDown={(e) => {
                                 e.stopPropagation();
-                                // Need to add Resize Handler
+                                onResizeHandlePointerDown(
+                                    Side.Bottom + Side.Left,
+                                    bounds
+                                );
                             }}
                         />
                         <rect
@@ -162,7 +174,7 @@ export const SelectionBox = memo(
                             }}
                             onPointerDown={(e) => {
                                 e.stopPropagation();
-                                // Need to add Resize Handler
+                                onResizeHandlePointerDown(Side.Left, bounds);
                             }}
                         />
                     </>

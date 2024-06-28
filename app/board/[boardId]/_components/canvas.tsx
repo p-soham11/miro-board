@@ -2,7 +2,7 @@
 
 "use client";
 
-import { useCallback, useMemo, useState } from "react";
+import { use, useCallback, useMemo, useState } from "react";
 import {
     useHistory,
     useSelf,
@@ -22,10 +22,16 @@ import {
     Color,
     LayerType,
     Point,
+    Side,
+    XYWH,
 } from "@/types/canvas";
 import { CursorsPresence } from "./cursorsPresence";
 import { set } from "date-fns";
-import { pointerEventToCanvasPoint, randomColor } from "@/lib/utils";
+import {
+    pointerEventToCanvasPoint,
+    randomColor,
+    resizeBounds,
+} from "@/lib/utils";
 import { root } from "postcss";
 import { nanoid } from "nanoid";
 import { LiveObject } from "@liveblocks/client";
@@ -93,6 +99,40 @@ export const Canvas = ({ boardId }: CanvasProps) => {
         [lastUsedColor]
     );
 
+    const resizeLayer = useMutation(
+        ({ storage, self }, point: Point) => {
+            if (canvasState.mode !== CanvasMode.Resizing) {
+                return;
+            }
+
+            const bounds = resizeBounds(
+                canvasState.initialBounds,
+                canvasState.corner,
+                point
+            );
+
+            const liveLayers = storage.get("layers");
+            const layer = liveLayers.get(self.presence.selection[0]);
+
+            if (layer) {
+                layer.update(bounds);
+            }
+        },
+        [canvasState]
+    );
+
+    const onResizeHandlePointerDown = useCallback(
+        (corner: Side, initialBounds: XYWH) => {
+            history.pause();
+            setCanvasState({
+                mode: CanvasMode.Resizing,
+                corner,
+                initialBounds,
+            });
+        },
+        [history]
+    );
+
     const onWheel = useCallback((e: React.WheelEvent) => {
         setCamera((camera) => ({
             x: camera.x - e.deltaX,
@@ -109,9 +149,14 @@ export const Canvas = ({ boardId }: CanvasProps) => {
             e.preventDefault();
             const current = pointerEventToCanvasPoint(e, camera);
             // console.log(current);
+
+            if (canvasState.mode === CanvasMode.Resizing) {
+                resizeLayer(current);
+            }
+
             setMyPresence({ cursor: current });
         },
-        []
+        [canvasState, resizeLayer, camera]
     );
 
     const onPointerUp = useMutation(
@@ -148,7 +193,7 @@ export const Canvas = ({ boardId }: CanvasProps) => {
 
             if (!self.presence.selection.includes(layerId)) {
                 setMyPresence({ selection: [layerId] });
-                // I am not adding selection to history here!
+                // Not adding selection to history here!
             }
             setCanvasState({ mode: CanvasMode.Translating, current: point });
         },
@@ -198,7 +243,9 @@ export const Canvas = ({ boardId }: CanvasProps) => {
                             selectionColor={layerIdsToColorSelection[layerId]}
                         />
                     ))}
-                    <SelectionBox onResizeHandlePointerDown={() => {}} />
+                    <SelectionBox
+                        onResizeHandlePointerDown={onResizeHandlePointerDown}
+                    />
                     <CursorsPresence />
                 </g>
             </svg>
