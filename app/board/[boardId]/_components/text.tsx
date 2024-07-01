@@ -11,6 +11,15 @@ const handFont = Kalam({
     weight: "400",
 });
 
+const calcFontSize = (width: number, height: number) => {
+    const maxFontSize = 100;
+    const scaleFactor = 0.5;
+    const checkFontSize = Math.min(width, height) * scaleFactor;
+    const fontSize = Math.min(checkFontSize, maxFontSize);
+
+    return fontSize;
+};
+
 interface TextProps {
     id: string;
     layer: TextLayer;
@@ -26,6 +35,15 @@ export const Text = ({
 }: TextProps) => {
     const { x, y, width, height, fill, value } = layer;
 
+    const updateText = useMutation(({ storage }, newText: string) => {
+        const liveLayers = storage.get("layers");
+        liveLayers.get(id)?.set("value", newText);
+    }, []);
+
+    const handleTextChange = (e: ContentEditableEvent) => {
+        updateText(e.target.value);
+    };
+
     return (
         <foreignObject
             x={x}
@@ -40,13 +58,16 @@ export const Text = ({
             }}
         >
             <ContentEditable
-                html={"Text"}
-                onChange={() => {}}
+                html={value || "Text"}
+                onChange={handleTextChange}
                 className={cn(
                     "h-full w-full flex items-center justify-center text-center drop-shadow-md outline-none",
                     handFont.className
                 )}
-                style={{ color: fill ? colorToCss(fill) : "#1e1e1e" }}
+                style={{
+                    fontSize: calcFontSize(width, height),
+                    color: fill ? colorToCss(fill) : "#1e1e1e",
+                }}
             />
         </foreignObject>
     );
