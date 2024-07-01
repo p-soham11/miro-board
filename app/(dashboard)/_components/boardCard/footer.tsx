@@ -2,8 +2,7 @@
 
 import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { title } from "process";
-import React, { MouseEvent } from "react";
+import React from "react";
 
 interface FooterProps {
     title: string;
@@ -14,14 +13,14 @@ interface FooterProps {
     disabled: boolean;
 }
 
-export const Footer = ({
+export const Footer: React.FC<FooterProps> = ({
     title,
     authorLabel,
     createdAtLabel,
     isFavourite,
     onClick,
     disabled,
-}: FooterProps) => {
+}) => {
     const handleClick = (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
