@@ -101,3 +101,49 @@ export function findIntersectingLayersWithRectangle(
     }
     return ids;
 }
+
+export function penPointsToPathLayer(
+    points: number[][],
+    color: Color
+): PathLayer {
+    if (points.length < 2) {
+        throw new Error("Not enough points to create a path");
+    }
+
+    let left = Number.POSITIVE_INFINITY;
+    let top = Number.POSITIVE_INFINITY;
+    let right = Number.NEGATIVE_INFINITY;
+    let bottom = Number.NEGATIVE_INFINITY;
+
+    for (const point of points) {
+        const [x, y] = point;
+        if (x < left) left = x;
+        if (y < top) top = y;
+        if (x > right) right = x;
+        if (y > bottom) bottom = y;
+    }
+
+    return {
+        type: LayerType.Path,
+        x: left,
+        y: top,
+        width: right - left,
+        height: bottom - top,
+        fill: color,
+        points: points.map(([x, y, pressure]) => [x - left, y - top, pressure]),
+    };
+}
+
+export function getSvgPathFromStroke(stroke: number[][]) {
+    if (!stroke.length) return "";
+    const d = stroke.reduce(
+        (acc, [x0, y0], i, arr) => {
+            const [x1, y1] = arr[(i + 1) % arr.length];
+            acc.push(x0, y0, (x0 + x1) / 2, (y0 + y1) / 2);
+            return acc;
+        },
+        ["M", ...stroke[0], "Q"]
+    );
+    d.push("Z");
+    return d.join(" ");
+}

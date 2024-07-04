@@ -20,6 +20,8 @@ const client = createClient({
 type Presence = {
     cursor: { x: number; y: number } | null;
     selection: string[];
+    pencilDraft: [x: number, y: number, pressure: number][] | null;
+    penColor: Color | null;
 };
 type Storage = {
     layers: LiveMap<string, LiveObject<Layer>>;
