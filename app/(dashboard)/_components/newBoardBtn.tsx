@@ -8,6 +8,8 @@ import { useApiMutation } from "@/hooks/useApiMutation";
 import { api } from "@/convex/_generated/api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useProModal } from "@/store/useProModal";
+import { on } from "events";
 
 interface NewBoardBtnProps {
     orgId: string;
@@ -16,6 +18,7 @@ interface NewBoardBtnProps {
 
 export const NewBoardBtn = ({ orgId, disabled }: NewBoardBtnProps) => {
     const router = useRouter();
+    const { onOpen } = useProModal();
     const { mutate, pending } = useApiMutation(api.board.create);
 
     const addBoard = () => {
@@ -24,7 +27,10 @@ export const NewBoardBtn = ({ orgId, disabled }: NewBoardBtnProps) => {
                 toast.success("Board Created! 🎉");
                 router.push(`/board/${id}`);
             })
-            .catch(() => toast.error("Failed to create board! ❌"));
+            .catch(() => {
+                toast.error("Failed to create board! ❌");
+                onOpen();
+            });
     };
 
     return (
