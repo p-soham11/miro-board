@@ -45,7 +45,7 @@ export const ProModal = () => {
                             <li>Unlimited Layers</li>
                         </ul>
                     </div>
-                    <Button color="primary" className="w-full">
+                    <Button color="primary" className="w-full font-semibold">
                         Upgrade
                     </Button>
                 </div>
